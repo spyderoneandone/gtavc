@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Vice City | @notsameer</title>
+      <link rel="icon" type="image/x-icon" href="https://img.icons8.com/?size=100&id=LQvs2TUxXdFy&format=png&color=000000">
+    <!-- Poppins Font: Modern but used in a Y2K/Retro UI context -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(circle at 20% 30%, #0a0f1e, #03050b);
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Y2K / Retro aesthetic: glitched borders, chrome effects, translucent glassmorphism */
+        .retro-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 24px 24px 24px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Header area - Y2K style badge */
+        .y2k-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+            padding: 0 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .title-glow {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFD966, #FFB347, #FF5E7E);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 6px rgba(255, 180, 70, 0.6);
+            position: relative;
+            display: inline-block;
+        }
+
+        .title-glow::after {
+            content: "// VICE ARCHIVE";
+            font-size: 0.7rem;
+            font-weight: 500;
+            background: none;
+            -webkit-background-clip: unset;
+            background-clip: unset;
+            color: #ffb86c;
+            text-shadow: none;
+            margin-left: 12px;
+            letter-spacing: 2px;
+            opacity: 0.8;
+        }
+
+        .retro-badge {
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 200, 100, 0.7);
+            border-radius: 40px;
+            padding: 6px 16px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #ffe6c7;
+            box-shadow: 0 0 8px rgba(255, 170, 0, 0.3);
+            font-family: 'Poppins', monospace;
+        }
+
+        .retro-badge span {
+            color: #ffcd7e;
+            margin-right: 6px;
+        }
+
+        /* iframe container - glassmorphic Y2K style panel */
+        .iframe-container {
+            position: relative;
+            width: 100%;
+            flex: 1;
+            min-height: 65vh;
+            border-radius: 28px;
+            background: rgba(10, 15, 25, 0.5);
+            backdrop-filter: blur(2px);
+            border: 2px solid rgba(255, 205, 100, 0.65);
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,200,0.2);
+            transition: all 0.2s ease;
+            overflow: hidden;
+        }
+
+        /* Chrome / Edge / Safari specific iframe styling */
+        #full-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+            background: #000000dd;
+            position: relative;
+            z-index: 3;
+        }
+
+        /* retro scanline effect (optional but Y2K vibes) */
+        .iframe-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 255, 255, 0.02) 0px,
+                rgba(255, 0, 255, 0.02) 2px,
+                transparent 2px,
+                transparent 6px
+            );
+            z-index: 5;
+            border-radius: 28px;
+        }
+
+        /* glowing edge effect */
+        .iframe-container::after {
+            content: "";
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(145deg, #ffbf6e, #ff416d, #ffb347);
+            border-radius: 30px;
+            z-index: -1;
+            opacity: 0.35;
+            filter: blur(10px);
+            transition: opacity 0.3s;
+        }
+
+        .iframe-container:hover::after {
+            opacity: 0.6;
+        }
+
+        /* Footer / extra retro details */
+        .retro-footer {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 18px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #ccaaff;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .retro-footer .status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0,0,0,0.5);
+            padding: 5px 12px;
+            border-radius: 30px;
+            backdrop-filter: blur(4px);
+            border: 1px solid #ffbc6e40;
+        }
+
+        .blink-dot {
+            width: 8px;
+            height: 8px;
+            background: #0f0;
+            border-radius: 50%;
+            box-shadow: 0 0 5px #0f0;
+            animation: pulse 1.2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.3; transform: scale(0.8);}
+            100% { opacity: 1; transform: scale(1.2);}
+        }
+
+        /* ============================================= */
+        /* BUTTON RIGHT BOTTOM: FOLLOW ME ON X - Y2K/retro style */
+        /* ============================================= */
+        .follow-x-btn {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            z-index: 1000;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            background: linear-gradient(125deg, #000000, #1a1a2e);
+            backdrop-filter: blur(12px);
+            border: 2px solid;
+            border-color: #ffcc55 #ff9966 #ffcc55 #ff9966;
+            border-radius: 60px;
+            padding: 12px 24px;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6), 0 0 0 2px rgba(255, 200, 70, 0.3), inset 0 1px 0 rgba(255,255,200,0.2);
+            cursor: pointer;
+        }
+
+        .follow-x-btn:hover {
+            transform: scale(1.03) translateY(-3px);
+            background: linear-gradient(135deg, #0f0f1f, #202040);
+            border-color: #ffdd88 #ffaa77 #ffdd88 #ffaa77;
+            box-shadow: 0 12px 28px black, 0 0 12px #ffb34780;
+            color: #fff5e0;
+        }
+
+        .follow-x-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* X logo / modern retro cross element */
+        .x-icon {
+            font-weight: 900;
+            font-size: 1.35rem;
+            background: white;
+            color: black;
+            width: 28px;
+            height: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: 0.2s;
+            font-family: monospace;
+        }
+
+        .follow-x-btn:hover .x-icon {
+            background: #ffd966;
+            color: #000;
+            transform: rotate(5deg);
+        }
+
+        /* ============================================= */
+        /* FULLSCREEN BUTTON (BOTTOM LEFT) - Y2K STYLE */
+        /* ============================================= */
+        .fullscreen-btn {
+            position: fixed;
+            bottom: 28px;
+            left: 28px;
+            z-index: 1000;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            background: linear-gradient(125deg, #0a0a1a, #16162c);
+            backdrop-filter: blur(12px);
+            border: 2px solid;
+            border-color: #6effb0 #3bc9ff #6effb0 #3bc9ff;
+            border-radius: 60px;
+            padding: 12px 24px;
+            color: #e2ffec;
+            text-decoration: none;
+            font-size: 1rem;
+            letter-spacing: 1px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6), 0 0 0 2px rgba(80, 255, 160, 0.3), inset 0 1px 0 rgba(200, 255, 220, 0.2);
+            cursor: pointer;
+            background-color: #0f1422;
+        }
+
+        .fullscreen-btn:hover {
+            transform: scale(1.03) translateY(-3px);
+            background: linear-gradient(135deg, #12172f, #1e2442);
+            border-color: #8effcc #5ed9ff #8effcc #5ed9ff;
+            box-shadow: 0 12px 28px black, 0 0 12px #3eff9e80;
+            color: #ffffff;
+        }
+
+        .fullscreen-btn:active {
+            transform: scale(0.98);
+        }
+
+        .fs-icon {
+            font-size: 1.35rem;
+            font-weight: 900;
+            display: inline-block;
+            filter: drop-shadow(0 0 2px cyan);
+        }
+
+        /* when in fullscreen mode, subtle style change for button (optional) */
+        body:fullscreen .fullscreen-btn {
+            background: linear-gradient(125deg, #2a2a3a, #1e1e3a);
+            border-color: #ffcc55;
+            box-shadow: 0 0 12px gold;
+        }
+
+        /* Mobile responsiveness: ensure iframe adapts nicely */
+        @media (max-width: 760px) {
+            .retro-wrapper {
+                padding: 12px;
+            }
+            .title-glow {
+                font-size: 1.3rem;
+            }
+            .title-glow::after {
+                font-size: 0.55rem;
+                margin-left: 6px;
+            }
+            .follow-x-btn {
+                padding: 8px 18px;
+                font-size: 0.85rem;
+                bottom: 20px;
+                right: 20px;
+            }
+            .fullscreen-btn {
+                padding: 8px 18px;
+                font-size: 0.85rem;
+                bottom: 20px;
+                left: 20px;
+                gap: 8px;
+            }
+            .x-icon {
+                width: 24px;
+                height: 24px;
+                font-size: 1.1rem;
+            }
+            .fs-icon {
+                font-size: 1.1rem;
+            }
+            .retro-badge {
+                font-size: 0.65rem;
+                padding: 4px 12px;
+            }
+            .iframe-container {
+                min-height: 55vh;
+            }
+        }
+
+        /* ensure iframe takes full container height, works in all browsers */
+        html, body {
+            height: 100%;
+        }
+
+        /* custom scrollbar retro */
+        ::-webkit-scrollbar {
+            width: 8px;
+            background: #0c0f18;
+        }
+        ::-webkit-scrollbar-track {
+            background: #181c2c;
+            border-left: 1px solid #ffbc6e30;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ffb34780;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ffcc66;
+        }
+
+        /* small fullscreen helper to ensure iframe gets fullscreen treatment */
+        .iframe-container:-webkit-full-screen,
+        .iframe-container:fullscreen,
+        #full-iframe:-webkit-full-screen,
+        #full-iframe:fullscreen {
+            width: 100%;
+            height: 100%;
+            border-radius: 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="retro-wrapper">
+    <div class="y2k-header">
+        <div class="title-glow">VICE CITY // @notsameer</div>
+        <div class="retro-badge">
+            <span>✦</span> Y2K EDITION <span>✦</span>
+        </div>
+    </div>
+    
+    <!-- Embed iframe exactly as requested with full permissions and fullscreen support -->
+    <div class="iframe-container" id="iframeContainer">
+        <iframe id="full-iframe" 
+                src="https://vc.quenq.com" 
+                title="Vice City" 
+                allow="accelerometer; autoplay; bluetooth; camera; clipboard-read; clipboard-write; cross-origin-isolated; display-capture; encrypted-media; fullscreen; gamepad; geolocation; gyroscope; hid; identity-credentials-get; idle-detection; local-fonts; magnetometer; microphone; midi; payment; picture-in-picture; publickey-credentials-get; screen-wake-lock; serial; usb; web-share; window-management; xr-spatial-tracking; keyboard-map" 
+                allowfullscreen="">
+        </iframe>
+    </div>
+    
+    <div class="retro-footer">
+        <div class="status">
+            <div class="blink-dot"></div>
+            <span>SESSION ACTIVE // LIVE FEED</span>
+        </div>
+        <div class="status">
+            <span>🔮 RETRO WAVE MODE</span>
+        </div>
+    </div>
+</div>
+
+<!-- FOLLOW ME ON X BUTTON - BOTTOM RIGHT, opens in new tab -->
+<a href="https://x.com/" target="_blank" rel="noopener noreferrer" class="follow-x-btn" id="followXButton">
+    <span class="x-icon">𝕏</span>
+    <span>FOLLOW ME ON X</span>
+</a>
+
+<!-- FULLSCREEN BUTTON - BOTTOM LEFT (triggers fullscreen for iframe OR container) -->
+<button class="fullscreen-btn" id="fullscreenBtn">
+    <span class="fs-icon">⛶</span>
+    <span>FULLSCREEN</span>
+</button>
+
+<script>
+    (function() {
+        // 1. X Button Configuration (customizable)
+        const followBtn = document.getElementById('followXButton');
+        // Replace the URL with your actual X/Twitter profile link for production:
+        const actualXProfile = "https://x.com/";  // <--- CHANGE THIS TO YOUR X PROFILE (e.g., https://x.com/YourHandle)
+        followBtn.href = actualXProfile;
+        console.log("✅ X button ready! Replace the href with your X profile link if needed.");
+        
+        // Optional Y2K glitch effect on X button text
+        const btnTextSpan = followBtn.querySelector('span:last-child');
+        if(btnTextSpan) {
+            let originalText = btnTextSpan.innerText;
+            followBtn.addEventListener('mouseenter', () => {
+                if(!followBtn.hasAttribute('data-glitched')) {
+                    const glitchVariants = ['F0LLOW M3 ON X', 'FØLL0W MΞ ON X', 'F◉LLOW ME ON 𐩒', 'F0LL0W ME ON 𝕏'];
+                    let randomGlitch = glitchVariants[Math.floor(Math.random() * glitchVariants.length)];
+                    btnTextSpan.innerText = randomGlitch;
+                    followBtn.setAttribute('data-glitched', 'true');
+                    setTimeout(() => {
+                        if(followBtn) btnTextSpan.innerText = originalText;
+                        followBtn.removeAttribute('data-glitched');
+                    }, 280);
+                }
+            });
+        }
+        
+        // 2. FULLSCREEN FUNCTIONALITY (Bottom Left Button)
+        // We'll target the iframe container + iframe for a seamless fullscreen experience.
+        // For better UX, we can request fullscreen on the .iframe-container element, which contains the iframe.
+        // That way the entire panel + border goes fullscreen, making it feel like a "Vice City immersive mode".
+        const container = document.getElementById('iframeContainer');
+        const iframe = document.getElementById('full-iframe');
+        const fsButton = document.getElementById('fullscreenBtn');
+        
+        // Function to toggle fullscreen for the container element
+        function toggleFullscreen() {
+            if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.mozFullScreenElement && !document.msFullscreenElement) {
+                // Enter fullscreen on the container (which holds the iframe with its cool retro borders)
+                const elemToFullscreen = container;
+                const requestMethod = elemToFullscreen.requestFullscreen ||
+                                      elemToFullscreen.webkitRequestFullscreen ||
+                                      elemToFullscreen.mozRequestFullScreen ||
+                                      elemToFullscreen.msRequestFullscreen;
+                if (requestMethod) {
+                    requestMethod.call(elemToFullscreen).catch(err => {
+                        console.warn(`Fullscreen error: ${err.message}`);
+                        // Fallback: try to make iframe fullscreen directly if container fails (rare)
+                        if (iframe && iframe.requestFullscreen) {
+                            iframe.requestFullscreen();
+                        }
+                    });
+                }
+                // Update button text and style feedback
+                if (fsButton) {
+                    const fsSpan = fsButton.querySelector('span:last-child');
+                    if (fsSpan) fsSpan.innerText = 'EXIT';
+                    const iconSpan = fsButton.querySelector('.fs-icon');
+                    if (iconSpan) iconSpan.innerHTML = '✖';
+                }
+            } else {
+                // Exit fullscreen
+                const exitMethod = document.exitFullscreen ||
+                                  document.webkitExitFullscreen ||
+                                  document.mozCancelFullScreen ||
+                                  document.msExitFullscreen;
+                if (exitMethod) {
+                    exitMethod.call(document);
+                }
+                // Reset button text
+                if (fsButton) {
+                    const fsSpan = fsButton.querySelector('span:last-child');
+                    if (fsSpan) fsSpan.innerText = 'FULLSCREEN';
+                    const iconSpan = fsButton.querySelector('.fs-icon');
+                    if (iconSpan) iconSpan.innerHTML = '⛶';
+                }
+            }
+        }
+        
+        // Listen for fullscreen change events to keep button sync (in case user presses ESC)
+        function onFullscreenChange() {
+            const isFullscreen = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+            if (fsButton) {
+                const fsSpan = fsButton.querySelector('span:last-child');
+                const iconSpan = fsButton.querySelector('.fs-icon');
+                if (isFullscreen) {
+                    if (fsSpan) fsSpan.innerText = 'EXIT';
+                    if (iconSpan) iconSpan.innerHTML = '✖';
+                } else {
+                    if (fsSpan) fsSpan.innerText = 'FULLSCREEN';
+                    if (iconSpan) iconSpan.innerHTML = '⛶';
+                }
+            }
+        }
+        
+        // Attach fullscreen change events
+        document.addEventListener('fullscreenchange', onFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', onFullscreenChange);
+        document.addEventListener('mozfullscreenchange', onFullscreenChange);
+        document.addEventListener('MSFullscreenChange', onFullscreenChange);
+        
+        // Click handler for the fullscreen button
+        if (fsButton) {
+            fsButton.addEventListener('click', toggleFullscreen);
+        }
+        
+        // Additional: make sure iframe has the proper attributes for fullscreen inside container
+        // Allow the iframe to expand inside container when fullscreen is applied to container.
+        if (iframe) {
+            iframe.setAttribute('allowfullscreen', 'true');
+            // To improve experience, iframe will naturally fill because container uses flex/height:100%
+            const resizeObserver = new ResizeObserver(() => {
+                if (container && iframe) {
+                    iframe.style.height = '100%';
+                    iframe.style.width = '100%';
+                }
+            });
+            if (container) resizeObserver.observe(container);
+        }
+        
+        // Make sure the container has correct height propagation inside fullscreen mode
+        const style = document.createElement('style');
+        style.textContent = `
+            /* Ensure when container is fullscreen, it fills entire screen with background and iframe */
+            #iframeContainer:fullscreen,
+            #iframeContainer:-webkit-full-screen,
+            #iframeContainer:fullscreen {
+                width: 100vw !important;
+                height: 100vh !important;
+                max-width: 100%;
+                border-radius: 0 !important;
+                background: #000 !important;
+                border: none !important;
+                display: flex !important;
+                align-items: center;
+                justify-content: center;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            #iframeContainer:fullscreen #full-iframe,
+            #iframeContainer:-webkit-full-screen #full-iframe {
+                width: 100% !important;
+                height: 100% !important;
+                border-radius: 0 !important;
+            }
+            #iframeContainer:fullscreen::before,
+            #iframeContainer:fullscreen::after {
+                display: none !important;
+            }
+            /* keep the retro style but hide glows in fullscreen for cleaner look (optional) */
+            body:fullscreen .retro-footer,
+            body:-webkit-full-screen .retro-footer {
+                opacity: 0.9;
+                transition: 0.2s;
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Final fallback: handle fullscreen from mobile / gestures gracefully
+        // Preload iframe and provide extra logging
+        console.log("💿 Retro Y2K Interface Loaded | Fullscreen button attached to bottom left | X button bottom right");
+        
+        // Minor retro effect for fullscreen button: Y2K hover glow (already in CSS)
+        // Ensure the iframe container never loses its aspect ratio
+        window.addEventListener('load', () => {
+            if (container && iframe) {
+                // Force iframe to fill container completely on any resize
+                const updateDimensions = () => {
+                    if (container && iframe) {
+                        iframe.style.height = container.clientHeight + 'px';
+                        iframe.style.width = container.clientWidth + 'px';
+                    }
+                };
+                window.addEventListener('resize', updateDimensions);
+                updateDimensions();
+            }
+        });
+    })();
+</script>
+
+<!-- Additional retro flair: CSS to make text glitch occasionally for extreme Y2K vibe -->
+<style>
+    /* micro glitch animation for title on hover */
+    .title-glow {
+        transition: text-shadow 0.2s;
+    }
+    .title-glow:hover {
+        text-shadow: 2px 2px 0px #ff00c1, -2px -2px 0px #00ffff;
+        animation: glitchShake 0.12s infinite alternate;
+    }
+    @keyframes glitchShake {
+        0% { transform: translate(0px, 0px); }
+        100% { transform: translate(1px, -0.5px); }
+    }
+    
+    /* Additional Y2K button right-bottom subtle animations */
+    .follow-x-btn {
+        animation: floatGlow 3s infinite ease-in-out;
+    }
+    .fullscreen-btn {
+        animation: floatGlowFS 3s infinite ease-in-out;
+    }
+    @keyframes floatGlow {
+        0% { box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6), 0 0 0 2px rgba(255, 200, 70, 0.3); }
+        50% { box-shadow: 0 10px 28px rgba(0, 0, 0, 0.8), 0 0 0 3px rgba(255, 210, 100, 0.7); }
+        100% { box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6), 0 0 0 2px rgba(255, 200, 70, 0.3); }
+    }
+    @keyframes floatGlowFS {
+        0% { box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6), 0 0 0 2px rgba(80, 255, 160, 0.3); }
+        50% { box-shadow: 0 10px 28px rgba(0, 0, 0, 0.8), 0 0 0 3px rgba(110, 255, 180, 0.7); }
+        100% { box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6), 0 0 0 2px rgba(80, 255, 160, 0.3); }
+    }
+    
+    /* iframe container enhanced reflections */
+    @media (min-width: 1024px) {
+        .iframe-container {
+            transition: transform 0.2s;
+        }
+        .iframe-container:hover {
+            transform: scale(1.005);
+        }
+    }
+    
+    /* Additional retro scanline overlay on body (soft) */
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: repeating-linear-gradient(0deg, rgba(0,255,255,0.02) 0px, rgba(0,0,0,0.02) 2px, transparent 2px, transparent 6px);
+        pointer-events: none;
+        z-index: 999;
+    }
+    
+    /* Chrome Full-iframe consistency: allow iframe to respect border radius */
+    .iframe-container iframe {
+        border-radius: 26px;
+        transition: border-radius 0.2s;
+    }
+    .iframe-container:fullscreen iframe,
+    .iframe-container:-webkit-full-screen iframe {
+        border-radius: 0 !important;
+    }
+</style>
+</body>
+</html>
